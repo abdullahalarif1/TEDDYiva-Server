@@ -32,18 +32,19 @@ async function run() {
 
         const myToyCollection = client.db('myToyCategory').collection('categories')
 
-        const indexKeys = { seller: 1, toyName: 1 };
-        const indexOptions = { name: "toyCategory" };
+        const indexKeys = { name: 1 };
+        const indexOptions = { name: "toyName" };
         const result = await myToyCollection.createIndex(indexKeys, indexOptions)
 
+        //search implement
         app.get('/toySearchBySeller/:text', async (req, res) => {
             const searchText = req.params.text
             console.log(searchText);
 
             const result = await myToyCollection.find({
                 $or: [
-                    { seller: { $regex: searchText, $options: "i" } },
-                    { toyName: { $regex: searchText, $options: "i" } },
+
+                    { name: { $regex: searchText, $options: "i" } },
                 ],
 
             }).toArray()
@@ -59,7 +60,7 @@ async function run() {
             res.send(result)
         })
 
-
+        // user email query
         app.get('/myToys', async (req, res) => {
             console.log(req.query.subCategory);
             let query = {}
@@ -68,11 +69,12 @@ async function run() {
                     query = { subcategory: req.query.subCategory }
 
             }
-            const cursor = myToyCollection.find(query).limit(20)
+            const cursor = myToyCollection.find(query).limit(20).sort({ price: -1 })
             const result = await cursor.toArray();
             res.send(result)
         })
 
+        // post
         app.post('/myToys', async (req, res) => {
             const user = req.body
             console.log('create new', user);
@@ -80,12 +82,14 @@ async function run() {
             res.send(result)
         })
 
+
         app.patch('/myToys/:id', async (req, res) => {
             updateToy = req.body;
             console.log(updateToy);
 
         })
 
+        //delete
         app.delete('/myToys/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
@@ -93,6 +97,7 @@ async function run() {
             res.send(result)
         })
 
+        //get id
         app.get('/myToys/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
@@ -100,7 +105,7 @@ async function run() {
             res.send(result)
         })
 
-
+        //put
         app.put('/myToys/:id', async (req, res) => {
             const id = req.params.id
             const user = req.body
@@ -122,8 +127,7 @@ async function run() {
         })
 
 
-
-
+        // trending
         app.get('/trending', async (req, res) => {
 
             res.send(trending)
