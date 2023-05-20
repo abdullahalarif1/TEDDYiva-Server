@@ -1,0 +1,42 @@
+[
+  {
+    "id": 12345,
+    "name": "Fluffy Teddy Bear",
+    "description": "A cuddly and adorable teddy bear with soft fur, perfect for snuggling.",
+    "color": "Brown",
+    "size": "Medium",
+    "price": 19.99,
+    "available": true,
+    "image": "https://images.unsplash.com/photo-1588090644556-14707d0e886a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80"
+  },
+  {
+    "id": 123454,
+    "name": "Fluffy Teddy Bear",
+    "description": "A cuddly and adorable teddy bear with soft fur, perfect for snuggling.",
+    "color": "Brown",
+    "size": "Medium",
+    "price": 19.99,
+    "available": true,
+    "image": "https://images.unsplash.com/photo-1584993358834-f8deafc4f3c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHRlZGR5JTIwYmVhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=1000&q=60"
+  },
+  {
+    "id": 123645,
+    "name": "Fluffy Teddy Bear",
+    "description": "A cuddly and adorable teddy bear with soft fur, perfect for snuggling.",
+    "color": "Brown",
+    "size": "Medium",
+    "price": 19.99,
+    "available": true,
+    "image": "https://images.pexels.com/photos/264917/pexels-photo-264917.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 123945,
+    "name": "Fluffy Teddy Bear",
+    "description": "A cuddly and adorable teddy bear with soft fur, perfect for snuggling.",
+    "color": "Brown",
+    "size": "Medium",
+    "price": 19.99,
+    "available": true,
+    "image": "https://images.pexels.com/photos/832999/pexels-photo-832999.jpeg?auto=compress&cs=tinysrgb&w=600"
+  }
+]

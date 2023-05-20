@@ -5,6 +5,8 @@ require('dotenv').config()
 const port = process.env.PORT || 5000
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
+const trending = require('./trending.json')
+
 // middleware
 app.use(cors())
 app.use(express.json())
@@ -27,18 +29,18 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         const usersCollection = client.db('shopCategory').collection('category')
-        const toyCollection = client.db('toyCategory').collection('categories')
+
         const myToyCollection = client.db('myToyCategory').collection('categories')
 
         const indexKeys = { seller: 1, toyName: 1 };
         const indexOptions = { name: "toyCategory" };
-        const result = await toyCollection.createIndex(indexKeys, indexOptions)
+        const result = await myToyCollection.createIndex(indexKeys, indexOptions)
 
         app.get('/toySearchBySeller/:text', async (req, res) => {
             const searchText = req.params.text
             console.log(searchText);
 
-            const result = await toyCollection.find({
+            const result = await myToyCollection.find({
                 $or: [
                     { seller: { $regex: searchText, $options: "i" } },
                     { toyName: { $regex: searchText, $options: "i" } },
@@ -57,29 +59,16 @@ async function run() {
             res.send(result)
         })
 
-        app.get('/users', async (req, res) => {
-            console.log(req.query);
-            const cursor = toyCollection.find(req.query).limit(20)
-            const result = await cursor.toArray()
-            res.send(result)
-        })
-
-
-
-        app.get('/users/:id', async (req, res) => {
-            const id = req.params.id
-            const query = { _id: new ObjectId(id) }
-            const result = await toyCollection.findOne(query)
-            res.send(result)
-        })
 
         app.get('/myToys', async (req, res) => {
-            console.log(req.query.name);
+            console.log(req.query.subCategory);
             let query = {}
-            if (req.query?.email) {
-                query = { email: req.query.email }
+            if (req.query?.email && req.query?.subCategory) {
+                query = { email: req.query.email },
+                    query = { subcategory: req.query.subCategory }
+
             }
-            const cursor = myToyCollection.find(query)
+            const cursor = myToyCollection.find(query).limit(20)
             const result = await cursor.toArray();
             res.send(result)
         })
@@ -135,7 +124,10 @@ async function run() {
 
 
 
+        app.get('/trending', async (req, res) => {
 
+            res.send(trending)
+        })
 
 
         // Send a ping to confirm a successful connection
