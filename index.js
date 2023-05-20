@@ -91,10 +91,44 @@ async function run() {
             res.send(result)
         })
 
+        app.patch('/myToys/:id', async (req, res) => {
+            updateToy = req.body;
+            console.log(updateToy);
+
+        })
+
         app.delete('/myToys/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: new ObjectId(id) }
             const result = await myToyCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        app.get('/myToys/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await myToyCollection.findOne(query)
+            res.send(result)
+        })
+
+
+        app.put('/myToys/:id', async (req, res) => {
+            const id = req.params.id
+            const user = req.body
+            console.log(user);
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updatedUser = {
+                $set: {
+                    name: user.name,
+                    price: user.price,
+                    quantity: user.quantity,
+                    description: user.description,
+
+
+                }
+            }
+            const result = await myToyCollection.updateOne(filter, updatedUser, options,)
             res.send(result)
         })
 
