@@ -27,15 +27,12 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // const usersCollection = client.db('shopCategory').collection('category')
-        // const toyCollection = client.db('toyCategory').collection('categories')
+        // await client.connect();
+
 
         const myToyCollection = client.db('myToyCategory').collection('categories')
 
-        const indexKeys = { name: 1 };
-        const indexOptions = { name: "toyName" };
-        const result = await myToyCollection.createIndex(indexKeys, indexOptions)
+
 
         //search implement
         app.get('/toySearchBySeller/:text', async (req, res) => {
@@ -53,58 +50,34 @@ async function run() {
         })
 
 
-        // app.get('/toys', async (req, res) => {
-        //     const searchText = req.query.text;
-        //     console.log(searchText);
-        //     let query = {}
-        //     if (req.query?.text) {
-        //         query = { subCategory: req.query.text }
-        //     }
-
-        //     const cursor = toyCollection.find(query);
-        //     const result = await cursor.toArray();
-        //     res.send(result);
-        // });
-
-        // app.get('/toys/:id', async (req, res) => {
-        //     const id = req.params.id
-        //     const query = { _id: new ObjectId(id) }
-        //     const result = await toyCollection.findOne(query)
-        //     res.send(result)
-        // })
-
-
-
-
-
-
-        app.get('/category', async (req, res) => {
-            const cursor = usersCollection.find()
-            const result = await cursor.toArray();
-            res.send(result)
-        })
-
         // user email query
         app.get('/myToys', async (req, res) => {
-            const searchText = req.query.text;
-            console.log(req.query);
-            console.log(searchText)
-
-            let query = {}
+            let query = {};
             if (req.query?.email) {
-                query = { email: req.query.email }
-
+                query = { email: req.query.email };
+            } else if (req.query?.text) {
+                query = { subCategory: req.query.text };
             }
-            if (req.query?.text) {
-                query = { subCategory: req.query.text }
-            }
-
 
             const sortOrder = req.query.order === 'descending' ? -1 : 1;
-            const cursor = myToyCollection.find(query).limit(20).sort({ price: sortOrder });
+            const emailSortOrder = req.query.emailSortOrder === 'ascending' ? 1 : -1;
 
-            const result = await cursor.toArray();
-            res.send(result)
+            if (req.query.email && req.query.order === 'ascending') {
+                const cursor = myToyCollection
+                    .find(query)
+                    .sort({ email: emailSortOrder, price: sortOrder })
+                    .limit(20);
+                const result = await cursor.toArray();
+                res.send(result);
+            } else {
+                const cursor = myToyCollection
+                    .find(query)
+                    .limit(20)
+                    .sort({ price: sortOrder });
+                const result = await cursor.toArray();
+                res.send(result);
+            }
+
         })
 
         // post
