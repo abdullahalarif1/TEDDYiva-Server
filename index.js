@@ -28,8 +28,8 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        const usersCollection = client.db('shopCategory').collection('category')
-        const toyCollection = client.db('toyCategory').collection('categories')
+        // const usersCollection = client.db('shopCategory').collection('category')
+        // const toyCollection = client.db('toyCategory').collection('categories')
 
         const myToyCollection = client.db('myToyCategory').collection('categories')
 
@@ -76,7 +76,7 @@ async function run() {
 
 
 
-      
+
 
         app.get('/category', async (req, res) => {
             const cursor = usersCollection.find()
@@ -87,7 +87,9 @@ async function run() {
         // user email query
         app.get('/myToys', async (req, res) => {
             const searchText = req.query.text;
+            console.log(req.query);
             console.log(searchText)
+
             let query = {}
             if (req.query?.email) {
                 query = { email: req.query.email }
@@ -96,7 +98,11 @@ async function run() {
             if (req.query?.text) {
                 query = { subCategory: req.query.text }
             }
-            const cursor = myToyCollection.find(query).limit(20).sort({ price: -1 })
+
+
+            const sortOrder = req.query.order === 'descending' ? -1 : 1;
+            const cursor = myToyCollection.find(query).limit(20).sort({ price: sortOrder });
+
             const result = await cursor.toArray();
             res.send(result)
         })
